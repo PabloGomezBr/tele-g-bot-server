@@ -45,6 +45,10 @@ const commands = [
         command: "gatito",
         description: "Te enviaré la foto de un gatito aleatorio.",
     },
+    {
+        command: "gatito2",
+        description: "Foto random de gatito repitiendo tu mensaje!",
+    },
 ];
 
 function sendHelp(msg) {
@@ -58,7 +62,7 @@ function sendHelp(msg) {
 
 function saveDoc(file_id, date, name) {
     const stream = bot.getFileStream(file_id);
-    stream.pipe(createWriteStream(`docs_storage/${date}_${name}`));
+    stream.pipe(createWriteStream(`uploads/docs/${date}_${name}`));
 }
 
 bot.on("message", (msg) => {
@@ -66,18 +70,26 @@ bot.on("message", (msg) => {
 });
 
 bot.on("document", (doc) => {
-    const chatId = doc.chat.id;
-    saveDoc(doc.document.file_id, doc.date, doc.document.file_name);
-
-    bot.sendMessage(chatId, "Document received!");
+    try {
+        const chatId = doc.chat.id;
+        saveDoc(doc.document.file_id, doc.date, doc.document.file_name);
+    
+        bot.sendMessage(chatId, "Document received!");
+    } catch (error) {
+        console.log('ERROR uploading document: ', error);
+    }
 });
 
 bot.on("photo", (photo) => {
-    const chatId = photo.chat.id;
-    const stream = bot.getFile(photo.photo[photo.photo.length - 1].file_id);
-    stream.pipe(createWriteStream(`docs_storage/${photo.date}`));
-
-    bot.sendMessage(chatId, "Photo received!");
+    try {
+        const chatId = photo.chat.id;
+        const stream = bot.getFile(photo.photo[photo.photo.length - 1].file_id);
+        stream.pipe(createWriteStream(`uploads/imgs/${photo.date}`));
+    
+        bot.sendMessage(chatId, "Photo received!");
+    } catch (error) {
+        console.log('ERROR uploading image: ', error);
+    }
 });
 
 bot.onText(/\/start/, async (msg) => {
@@ -140,16 +152,32 @@ bot.onText(/\/gatito/, (msg) => {
     const firstNumber = Math.floor(Math.random() * 10);
     const secondNumber = Math.floor(Math.random() * 10);
 
+    try {
+        bot.sendPhoto(
+            chatId,
+            `https://placekitten.com/${firstNumber}/${secondNumber}`
+        );
+    } catch (error) {
+        bot.sendMessage(chatId, "Lo siento... el gatito a muerto :(");
+        console.log('ERROR EN GATITO: ', error);
+    }
+});
+
+bot.onText(/\/gatito2 (.+)/, (msg, match) => {
+    const chatId = msg.chat.id;
+    const phrase = match[1];
+    bot.sendChatAction(chatId, "upload_photo");
+
     bot.sendPhoto(
         chatId,
-        `http://placekitten.com/50${firstNumber}/30${secondNumber}`
+        `https://cataas.com/cat/says/${phrase}`
     );
 });
 
 bot.onText(/\/contacto/, (msg) => {
     const chatId = msg.chat.id;
 
-    bot.sendContact(chatId, "677777777", "Fake", { last_name: "Contact" });
+    bot.sendContact(chatId, "684537618", "Fake", { last_name: "Contact" });
 });
 
 bot.onText(/\/encuesta/, (msg) => {
