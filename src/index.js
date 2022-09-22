@@ -227,9 +227,11 @@ bot.onText(/\/mensaje (.+)/, (command, message) => {
 	const chatId = command.chat.id;
 	const resp = message[1];
 
-    server.setHeader("Content-Type", "text/html");
-	server.end(`<h1>${resp}</h1>`);
-    bot.sendMessage(chatId, result + ' enviado al server!');
+    bot.sendMessage(chatId, 'El comando no está listo todavía...');
+    bot.sendMessage(chatId, `De momento te dejo aquí el <b><a href="https://web-production-9e1b.up.railway.app/">servidor</a></b>`, {
+		parse_mode: "HTML",
+	});
+
 	// server.post("/messages", function (req, res) {
 	// 	const result = new Message.findOneAndUpdate({}, { title: resp }).exec();
 	// 	contact.save(function (err) {
