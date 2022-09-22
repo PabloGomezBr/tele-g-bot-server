@@ -10,8 +10,7 @@ const server = http.createServer((req, res) => {
         console.log('*************** INSIDE ************ - POST RECEIVED: ', msg);
         res.writeHead(200, { "Content-Type": "text/html" });
         res.write(`<h1>${msg}</h1>`);
-        res.sendStatus(200);
-        res.end();
+        res.end(`<h1>${msg}</h1>`);
     } else {
         let mensaje = "<h1>Tele-g-bot</h1>";
         res.statusCode = 200;
@@ -29,8 +28,7 @@ app.post("/message", function (req, res) {
     console.log('*************** ALONE ************ - POST RECEIVED: ', msg);
     res.writeHead(200, { "Content-Type": "text/html" });
     res.write(`<h1>${msg}</h1>`);
-    res.sendStatus(200);
-    res.end();
+    res.end(`<h1>${msg}</h1>`);
 });
 
 /****************************************/
