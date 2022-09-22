@@ -6,10 +6,10 @@ const axios = require("axios");
 
 const server = http.createServer((req, res) => {
     if (req.url === '/message' && req.method === 'POST') {
-        const msg = req.body;
-        console.log('*************** INSIDE ************ - POST RECEIVED: ', msg);
+        const { msg } = req.body;
+        console.log('*************** INSIDE ************ - POST RECEIVED: ', req.body);
         res.writeHead(200, { "Content-Type": "text/html" });
-        res.write(`<h1>${msg}</h1>`);
+        // res.write(`<h1>${msg}</h1>`);
         res.end(`<h1>${msg}</h1>`);
     } else {
         let mensaje = "<h1>Tele-g-bot</h1>";
