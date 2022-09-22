@@ -5,10 +5,19 @@ const port = process.env.PORT || 3000;
 const axios = require("axios");
 
 const server = http.createServer((req, res) => {
-    let mensaje = "<h1>Tele-g-bot</h1>";
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "text/html");
-    res.end(mensaje);
+    if (req.url === '/message' && req.method === 'POST') {
+        const msg = req.body;
+        console.log('*************** INSIDE ************ - POST RECEIVED: ', msg);
+        res.writeHead(200, { "Content-Type": "text/html" });
+        res.write(`<h1>${msg}</h1>`);
+        res.sendStatus(200);
+        res.end();
+    } else {
+        let mensaje = "<h1>Tele-g-bot</h1>";
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "text/html");
+        res.end(mensaje);
+    }
 });
 
 server.listen(port, () => {
@@ -17,6 +26,7 @@ server.listen(port, () => {
 
 app.post("/message", function (req, res) {
     const msg = req.body;
+    console.log('*************** ALONE ************ - POST RECEIVED: ', msg);
     res.writeHead(200, { "Content-Type": "text/html" });
     res.write(`<h1>${msg}</h1>`);
     res.sendStatus(200);
