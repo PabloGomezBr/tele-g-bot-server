@@ -241,14 +241,21 @@ bot.onText(/\/mensaje (.+)/, (command, message) => {
 
     axios
         .post("https://web-production-9e1b.up.railway.app/message", {
-            msg: message,
+            msg: resp,
         })
         .then((res) => {
             console.log(`statusCode: ${res.statusCode}`);
             console.log(res);
+            bot.sendMessage(chatId, `¡MENSAJE PUBLICADO EN EL <b><a href="https://web-production-9e1b.up.railway.app/">SERVIDOR</a>!</b>`, {
+                parse_mode: "HTML",
+            });
         })
         .catch((error) => {
             console.error('ERROR POST: ', error);
+            bot.sendMessage(chatId, 'El comando no está listo todavía...');
+            bot.sendMessage(chatId, `De momento te dejo aquí el <b><a href="https://web-production-9e1b.up.railway.app/">servidor</a></b>`, {
+                parse_mode: "HTML",
+            });
         });
 
     // server.post("/messages", function (req, res) {
