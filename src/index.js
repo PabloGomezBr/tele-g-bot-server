@@ -227,16 +227,19 @@ bot.onText(/\/mensaje (.+)/, (command, message) => {
 	const chatId = command.chat.id;
 	const resp = message[1];
 
-	server.post("/messages", function (req, res) {
-		const result = new Message.findOneAndUpdate({}, { title: resp }).exec();
-		contact.save(function (err) {
-			if (err) {
-				bot.sendMessage(chatId, 'Algo ha ido mal...');
-			} else {
-				bot.sendMessage(chatId, result + ' enviado al server!');
-			}
-		});
-	});
+    server.setHeader("Content-Type", "text/html");
+	server.end(`<h1>${resp}</h1>`);
+    bot.sendMessage(chatId, result + ' enviado al server!');
+	// server.post("/messages", function (req, res) {
+	// 	const result = new Message.findOneAndUpdate({}, { title: resp }).exec();
+	// 	contact.save(function (err) {
+	// 		if (err) {
+	// 			bot.sendMessage(chatId, 'Algo ha ido mal...');
+	// 		} else {
+	// 			bot.sendMessage(chatId, result + ' enviado al server!');
+	// 		}
+	// 	});
+	// });
 });
 
 // bot.on('callback_query', (query) => {
