@@ -6,11 +6,12 @@ const axios = require("axios");
 
 const server = http.createServer((req, res) => {
     if (req.url === '/message' && req.method === 'POST') {
-        const { msg } = req.body;
-        console.log('*************** INSIDE ************ - POST RECEIVED: ', req.body);
+        const msg = req.body;
+        console.log('*************** INSIDE ************ - POST RECEIVED: ', msg);
         res.writeHead(200, { "Content-Type": "text/html" });
         // res.write(`<h1>${msg}</h1>`);
-        res.end(`<h1>${msg}</h1>`);
+        // res.end(`<h1>${msg}</h1>`);
+        res.end(`<h1>funciona... a medias</h1>`);
     } else {
         let mensaje = "<h1>Tele-g-bot</h1>";
         res.statusCode = 200;
@@ -238,9 +239,7 @@ bot.onText(/\/mensaje (.+)/, (command, message) => {
     // });
 
     axios
-        .post("https://web-production-9e1b.up.railway.app/message", {
-            msg: resp,
-        })
+        .post("https://web-production-9e1b.up.railway.app/message", { resp })
         .then((res) => {
             console.log(`statusCode: ${res.statusCode}`);
             console.log(res);
