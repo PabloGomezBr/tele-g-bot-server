@@ -30,16 +30,16 @@ const server = http.createServer((req, res) => {
     //     res.setHeader("Content-Type", "text/html");
     //     res.end(mensaje);
     // }
-    db.one('SELECT message FROM messages WHERE id = 1', [123])
-    .then(data => {
-        console.log('Seting msg from database: ', data.message);
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "text/html");
-        res.end(data.message);
-    })
-    .catch(error => {
-        console.log(error); // print the error;
-        res.statusCode(500);
+    client.query('SELECT message FROM messages WHERE id = 1', (err, { rows })=>{
+        if ( err ){
+            res.statusCode(500);
+        } else {
+            console.log('Seting msg from database: ', rows[0].message);
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "text/html");
+            res.end( rows[0].message);
+        }
+        client.end();
     });
 });
 
@@ -47,13 +47,13 @@ server.listen(port, () => {
     console.log(`Server running at port ` + port);
 });
 
-app.post("/message", function (req, res) {
-    const msg = req.body;
-    console.log('*************** ALONE ************ - POST RECEIVED: ', msg);
-    res.writeHead(200, { "Content-Type": "text/html" });
-    res.write(`<h1>${msg}</h1>`);
-    res.end(`<h1>${msg}</h1>`);
-});
+// app.post("/message", function (req, res) {
+//     const msg = req.body;
+//     console.log('*************** ALONE ************ - POST RECEIVED: ', msg);
+//     res.writeHead(200, { "Content-Type": "text/html" });
+//     res.write(`<h1>${msg}</h1>`);
+//     res.end(`<h1>${msg}</h1>`);
+// });
 
 /****************************************/
 
@@ -256,18 +256,20 @@ bot.onText(/\/mensaje (.+)/, (command, message) => {
     const chatId = command.chat.id;
     const resp = message[1];
 
-    db.one(`UPDATE messages SET message = '${resp}' WHERE id = 1`, [123])
-    .then(() => {
-        bot.sendMessage(chatId, `¡MENSAJE PUBLICADO EN EL <b><a href="https://web-production-9e1b.up.railway.app/">SERVIDOR</a>!</b>`, {
-            parse_mode: "HTML",
-        });
-    })
-    .catch(error => {
-        console.log(error);
-        bot.sendMessage(chatId, 'Algo ha ido mal y estoy trabajando en ello...');
-        bot.sendMessage(chatId, `De momento te dejo aquí el <b><a href="https://web-production-9e1b.up.railway.app/">servidor</a></b>`, {
-            parse_mode: "HTML",
-        });
+    client.query(`UPDATE messages SET message = '${resp}' WHERE id = 1`, (err, { rows })=>{
+        if ( err ){
+            console.log(error);
+            bot.sendMessage(chatId, 'Algo ha ido mal y estoy trabajando en ello...');
+            bot.sendMessage(chatId, `De momento te dejo aquí el <b><a href="https://web-production-9e1b.up.railway.app/">servidor</a></b>`, {
+                parse_mode: "HTML",
+            });
+        } else {
+            bot.sendMessage(chatId, `¡MENSAJE PUBLICADO EN EL <b><a href="https://web-production-9e1b.up.railway.app/">SERVIDOR</a>!</b>`, {
+                parse_mode: "HTML",
+            });
+            console.log('telegram sends message to database: ', resp);
+        }
+        client.end();
     });
 
     // bot.sendMessage(chatId, 'El comando no está listo todavía...');
