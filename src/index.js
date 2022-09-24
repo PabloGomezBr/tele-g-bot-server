@@ -37,7 +37,7 @@ const server = http.createServer((req, res) => {
             console.log('Seting msg from database: ', data.rows[0].message);
             res.statusCode = 200;
             res.setHeader("Content-Type", "text/html");
-            res.end( rows[0].message);
+            res.end(data.rows[0].message);
         }
         client.end();
     });
