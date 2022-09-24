@@ -4,20 +4,43 @@ var app = express();
 const port = process.env.PORT || 3000;
 const axios = require("axios");
 
+const { Client } = require('pg');
+
+const client = new Client({
+    user: 'postgres',
+    host: 'containers-us-west-49.railway.app',
+    database: 'railway',
+    password: 'UIlWtTHOGSR48Q7WbWKL',
+    port: 7218,
+});
+
+client.connect();
+
 const server = http.createServer((req, res) => {
-    if (req.url === '/message' && req.method === 'POST') {
-        const msg = req.body;
-        console.log('*************** INSIDE ************ - POST RECEIVED: ', msg);
-        res.writeHead(200, { "Content-Type": "text/html" });
-        // res.write(`<h1>${msg}</h1>`);
-        // res.end(`<h1>${msg}</h1>`);
-        res.end(`<h1>funciona... a medias</h1>`);
-    } else {
-        let mensaje = "<h1>Tele-g-bot</h1>";
+    // if (req.url === '/message' && req.method === 'POST') {
+    //     const msg = req.body;
+    //     console.log('*************** INSIDE ************ - POST RECEIVED: ', msg);
+    //     res.writeHead(200, { "Content-Type": "text/html" });
+    //     // res.write(`<h1>${msg}</h1>`);
+    //     // res.end(`<h1>${msg}</h1>`);
+    //     res.end(`<h1>funciona... a medias</h1>`);
+    // } else {
+    //     let mensaje = "<h1>Tele-g-bot</h1>";
+    //     res.statusCode = 200;
+    //     res.setHeader("Content-Type", "text/html");
+    //     res.end(mensaje);
+    // }
+    db.one('SELECT message FROM messages WHERE id = 1', [123])
+    .then(data => {
+        console.log('Seting msg from database: ', data.message);
         res.statusCode = 200;
         res.setHeader("Content-Type", "text/html");
-        res.end(mensaje);
-    }
+        res.end(data.message);
+    })
+    .catch(error => {
+        console.log(error); // print the error;
+        res.statusCode(500);
+    });
 });
 
 server.listen(port, () => {
@@ -233,27 +256,41 @@ bot.onText(/\/mensaje (.+)/, (command, message) => {
     const chatId = command.chat.id;
     const resp = message[1];
 
+    db.one(`UPDATE messages SET message = '${resp}' WHERE id = 1`, [123])
+    .then(() => {
+        bot.sendMessage(chatId, `¡MENSAJE PUBLICADO EN EL <b><a href="https://web-production-9e1b.up.railway.app/">SERVIDOR</a>!</b>`, {
+            parse_mode: "HTML",
+        });
+    })
+    .catch(error => {
+        console.log(error);
+        bot.sendMessage(chatId, 'Algo ha ido mal y estoy trabajando en ello...');
+        bot.sendMessage(chatId, `De momento te dejo aquí el <b><a href="https://web-production-9e1b.up.railway.app/">servidor</a></b>`, {
+            parse_mode: "HTML",
+        });
+    });
+
     // bot.sendMessage(chatId, 'El comando no está listo todavía...');
     // bot.sendMessage(chatId, `De momento te dejo aquí el <b><a href="https://web-production-9e1b.up.railway.app/">servidor</a></b>`, {
     // 	parse_mode: "HTML",
     // });
 
-    axios
-        .post("https://web-production-9e1b.up.railway.app/message", { resp })
-        .then((res) => {
-            console.log(`statusCode: ${res.statusCode}`);
-            console.log(res);
-            bot.sendMessage(chatId, `¡MENSAJE PUBLICADO EN EL <b><a href="https://web-production-9e1b.up.railway.app/">SERVIDOR</a>!</b>`, {
-                parse_mode: "HTML",
-            });
-        })
-        .catch((error) => {
-            console.error('ERROR POST: ', error);
-            bot.sendMessage(chatId, 'El comando no está listo todavía...');
-            bot.sendMessage(chatId, `De momento te dejo aquí el <b><a href="https://web-production-9e1b.up.railway.app/">servidor</a></b>`, {
-                parse_mode: "HTML",
-            });
-        });
+    // axios
+    //     .post("https://web-production-9e1b.up.railway.app/message", { resp })
+    //     .then((res) => {
+    //         console.log(`statusCode: ${res.statusCode}`);
+    //         console.log(res);
+    //         bot.sendMessage(chatId, `¡MENSAJE PUBLICADO EN EL <b><a href="https://web-production-9e1b.up.railway.app/">SERVIDOR</a>!</b>`, {
+    //             parse_mode: "HTML",
+    //         });
+    //     })
+    //     .catch((error) => {
+    //         console.error('ERROR POST: ', error);
+    //         bot.sendMessage(chatId, 'El comando no está listo todavía...');
+    //         bot.sendMessage(chatId, `De momento te dejo aquí el <b><a href="https://web-production-9e1b.up.railway.app/">servidor</a></b>`, {
+    //             parse_mode: "HTML",
+    //         });
+    //     });
 
     // server.post("/messages", function (req, res) {
     // 	const result = new Message.findOneAndUpdate({}, { title: resp }).exec();
