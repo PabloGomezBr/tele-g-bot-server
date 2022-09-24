@@ -30,20 +30,22 @@ const server = http.createServer((req, res) => {
     //     res.setHeader("Content-Type", "text/html");
     //     res.end(mensaje);
     // }
-    client.query('SELECT message FROM messages WHERE id = 1', (err, data)=>{
-        if ( err ){
-            console.log('ERRRROOOOOR: ', err);
-            res.statusCode = 200;
-            res.setHeader("Content-Type", "text/html");
-            res.end('ERROR: ', err);
-        } else {
-            console.log('Seting msg from database: ', data.rows[0].message);
-            res.statusCode = 200;
-            res.setHeader("Content-Type", "text/html");
-            res.end(data.rows[0].message);
-        }
-        client.end();
-    });
+    if (req.url === '/message') {
+        client.query('SELECT message FROM messages WHERE id = 1', (err, data)=>{
+            if ( err ){
+                console.log('ERRRROOOOOR: ', err);
+                res.statusCode = 200;
+                res.setHeader("Content-Type", "text/html");
+                res.end('ERROR: ', err);
+            } else {
+                console.log('Seting msg from database: ', data.rows[0].message);
+                res.statusCode = 200;
+                res.setHeader("Content-Type", "text/html");
+                res.end(data.rows[0].message);
+            }
+            client.end();
+        });
+    }
 });
 
 server.listen(port, () => {
@@ -267,10 +269,20 @@ bot.onText(/\/mensaje (.+)/, (command, message) => {
                 parse_mode: "HTML",
             });
         } else {
-            bot.sendMessage(chatId, `¡MENSAJE PUBLICADO EN EL <b><a href="https://web-production-9e1b.up.railway.app/">SERVIDOR</a>!</b>`, {
-                parse_mode: "HTML",
+            axios
+            .get("https://web-production-9e1b.up.railway.app/message", { resp })
+            .then((res) => {
+                bot.sendMessage(chatId, `¡MENSAJE PUBLICADO EN EL <b><a href="https://web-production-9e1b.up.railway.app/">SERVIDOR</a>!</b>`, {
+                    parse_mode: "HTML",
+                });
+            })
+            .catch((error) => {
+                console.error('ERROR POST: ', error);
+                bot.sendMessage(chatId, 'El comando no está listo todavía...');
+                bot.sendMessage(chatId, `De momento te dejo aquí el <b><a href="https://web-production-9e1b.up.railway.app/">servidor</a></b>`, {
+                    parse_mode: "HTML",
+                });
             });
-            console.log('telegram sends message to database: ', resp);
         }
         client.end();
     });
