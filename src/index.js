@@ -32,7 +32,7 @@ const server = http.createServer((req, res) => {
     // }
     client.query('SELECT message FROM messages WHERE id = 1', (err, data)=>{
         if ( err ){
-            res.statusCode(500);
+            res.statusCode = 500;
         } else {
             console.log('Seting msg from database: ', data.rows[0].message);
             res.statusCode = 200;
