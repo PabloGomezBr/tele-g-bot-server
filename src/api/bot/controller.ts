@@ -6,14 +6,6 @@ import { bot } from '../../server';
 import commands from './commands';
 import { saveDoc, sendHelp } from './helpers';
 
-export function onTextHola(msg: TelegramBot.Message) {
-    const chatId = msg.chat.id;
-    const botRes = msg ? `¡Hola <b>${msg.from.first_name}</b>!` : 'Ups... se te ha olvidado escribir el mensaje';
-    bot.sendMessage(chatId, botRes, {
-        parse_mode: 'HTML'
-    });
-}
-
 export async function onTextStart(msg: TelegramBot.Message) {
     const chatId = msg.chat.id;
     await bot.setMyCommands(commands);
@@ -26,6 +18,11 @@ export async function onTextStart(msg: TelegramBot.Message) {
 
 export function onTextHelp(msg: TelegramBot.Message) {
     sendHelp(msg);
+}
+
+export function onTextSaludos(msg: TelegramBot.Message) {
+    const chatId = msg.chat.id;
+    bot.sendMessage(chatId, `¡Hola <b>${msg.from.first_name}</b>!`, { parse_mode: 'HTML' });
 }
 
 export async function onTextChatbot(msg: TelegramBot.Message) {

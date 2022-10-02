@@ -3,8 +3,7 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import logger from 'node-color-log';
 import telegramBot from 'node-telegram-bot-api';
 
-import commands from './api/bot/commands';
-import { onTextChatbot, onTextContacto, onTextDice, onTextDocumento, onTextEcho, onTextEncuesta, onTextGatito, onTextGatito2, onTextHelp, onTextHola, onTextLocalizacion, onTextMensaje, onTextStart } from './api/bot/controller';
+import * as Controller from './api/bot/controller';
 import { saveDoc, sendHelp } from './api/bot/helpers';
 import router from './api/router';
 import postgres, { connectToPostgres } from './database/connect';
@@ -32,19 +31,19 @@ bot.on('message', (msg) => {
 });
 
 // Listeners
-bot.onText(/\/start/, msg => onTextStart(msg));
-bot.onText(/\/hola/, msg => onTextHola(msg));
-bot.onText(/\/help/, msg => onTextHelp(msg));
-bot.onText(/\/chatbot/, msg => onTextChatbot(msg));
-bot.onText(/\/localizacion/, msg => onTextLocalizacion(msg));
-bot.onText(/\/echo (.+)/, (msg, match) => onTextEcho(msg, match));
-bot.onText(/\/dice/, msg => onTextDice(msg));
-bot.onText(/\/gatito/, msg => onTextGatito(msg));
-bot.onText(/\/gatito2 (.+)/, (msg, match) => onTextGatito2(msg, match));
-bot.onText(/\/contacto/, msg => onTextContacto(msg));
-bot.onText(/\/encuesta/, msg => onTextEncuesta(msg));
-bot.onText(/\/documento/, msg => onTextDocumento(msg));
-bot.onText(/\/mensaje (.+)/, (msg, match) => onTextMensaje(msg, match));
+bot.onText(/\/start/, msg => Controller.onTextStart(msg));
+bot.onText(/\/saludos/, msg => Controller.onTextSaludos(msg));
+bot.onText(/\/help/, msg => Controller.onTextHelp(msg));
+bot.onText(/\/chatbot/, msg => Controller.onTextChatbot(msg));
+bot.onText(/\/localizacion/, msg => Controller.onTextLocalizacion(msg));
+bot.onText(/\/echo (.+)/, (msg, match) => Controller.onTextEcho(msg, match));
+bot.onText(/\/dice/, msg => Controller.onTextDice(msg));
+bot.onText(/\/gatito/, msg => Controller.onTextGatito(msg));
+bot.onText(/\/gatito2 (.+)/, (msg, match) => Controller.onTextGatito2(msg, match));
+bot.onText(/\/contacto/, msg => Controller.onTextContacto(msg));
+bot.onText(/\/encuesta/, msg => Controller.onTextEncuesta(msg));
+bot.onText(/\/documento/, msg => Controller.onTextDocumento(msg));
+bot.onText(/\/mensaje (.+)/, (msg, match) => Controller.onTextMensaje(msg, match));
 
 bot.on('document', (doc) => {
     try {
