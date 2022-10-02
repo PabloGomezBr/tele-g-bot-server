@@ -9,6 +9,8 @@ import { saveDoc, sendHelp } from './api/bot/helpers';
 import router from './api/router';
 import postgres, { connectToPostgres } from './database/connect';
 // import axios from 'axios';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config();
 
 // Boot express
 const app: Application = express();
@@ -22,7 +24,7 @@ app.use('/', router);
 app.listen(port, () => logger.color('green').success(`\nServer is listening on port ${port}!`));
 
 // Init Telegram Bot
-const token = '5698606555:AAH2NvBeqzpU5c0MthSUtuRTooO7goHnL7o';
+const token = process.env.TELEGRAM_TOKEN;
 export const bot = new telegramBot(token, { polling: true });
 
 bot.on('message', (msg) => {
