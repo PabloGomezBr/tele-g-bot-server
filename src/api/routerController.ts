@@ -8,7 +8,7 @@ import { postgres } from '../database/connect';
 export async function getMessage(req: Request, res: Response, next: NextFunction) {
     try {
         const response = await postgres.query('SELECT message FROM messages WHERE id = 1');
-        res.status(200).send(response.rows[0].message);
+        res.status(200).send(`<h1>${response.rows[0].message}</h1>`);
         // next(response.rows[0].message);
     } catch (error) {
         logger.log(error);
