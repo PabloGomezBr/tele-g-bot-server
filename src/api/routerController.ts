@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
 import logger from 'node-color-log';
 
@@ -6,10 +8,12 @@ import { postgres } from '../database/connect';
 export async function getMessage(req: Request, res: Response, next: NextFunction) {
     try {
         const response = await postgres.query('SELECT message FROM messages WHERE id = 1');
-        next(response.rows[0].message);
+        res.status(200).send(response.rows[0].message);
+        // next(response.rows[0].message);
     } catch (error) {
         logger.log(error);
-        next('ERROR');
+        res.status(500).send('Something went wrong...');
+        // next('ERROR');
     }
 
     // const response = postgres.query(
