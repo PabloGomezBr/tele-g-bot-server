@@ -2,7 +2,7 @@ import { createWriteStream } from 'fs';
 
 import telegramBot from 'node-telegram-bot-api';
 
-import { bot } from '../../server';
+import { bot } from '../server';
 import commands from './commands';
 
 export function sendHelp(msg: telegramBot.Message) {

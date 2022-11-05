@@ -1,9 +1,11 @@
-import express from 'express';
+import { Router } from 'express';
 
-const router = express.Router();
+import { getMessage } from './routerController';
 
-router.get('/', (req, res) => {
-    res.send('RAIZ DEL SERVER');
+const router = Router();
+
+router.get('/', getMessage, (req, res) => {
+    res.send();
 });
 
 router.post('/', (req, res) => {

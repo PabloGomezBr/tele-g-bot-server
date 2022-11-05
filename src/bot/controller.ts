@@ -1,8 +1,8 @@
 import logger from 'node-color-log';
 import TelegramBot from 'node-telegram-bot-api';
 
-import postgres from '../../database/connect';
-import { bot, isDatabaseConnected } from '../../server';
+import { postgres } from '../database/connect';
+import { bot, isDatabaseConnected } from '../server';
 import commands from './commands';
 import { saveDoc, sendHelp } from './helpers';
 
@@ -114,38 +114,57 @@ export function onTextDocumento(msg: TelegramBot.Message) {
     bot.sendMessage(msg.chat.id, startMessage, keyboard);
 }
 
-export function onTextMensaje(msg: TelegramBot.Message, text: RegExpExecArray) {
+export async function onTextMensaje(msg: TelegramBot.Message, text: RegExpExecArray) {
     const chatId = msg.chat.id;
     const resp = text[1];
 
-    postgres.query(
-        `UPDATE messages SET message = '${resp}' WHERE id = 1`,
-        (err, { rows }) => {
-            if (err) {
-                console.log(err);
-                bot.sendMessage(
-                    chatId,
-                    'Algo ha ido mal y estoy trabajando en ello...'
-                );
-                bot.sendMessage(
-                    chatId,
-                    'De momento te dejo aquí el <b><a href="https://web-production-9e1b.up.railway.app/">servidor</a></b>',
-                    {
-                        parse_mode: 'HTML'
-                    }
-                );
-            } else {
-                bot.sendMessage(
-                    chatId,
-                    '¡MENSAJE PUBLICADO EN EL <b><a href="https://web-production-9e1b.up.railway.app/">SERVIDOR</a>!</b>',
-                    {
-                        parse_mode: 'HTML'
-                    }
-                );
+    try {
+        await postgres.query(`UPDATE messages SET message = '${resp}' WHERE id = 1`);
+        bot.sendMessage(
+            chatId,
+            '¡MENSAJE PUBLICADO EN EL <b><a href="https://web-production-9e1b.up.railway.app/">SERVIDOR</a>!</b>',
+            {
+                parse_mode: 'HTML'
             }
-            postgres.end();
-        }
-    );
+        );
+    } catch (error) {
+        bot.sendMessage(
+            chatId,
+            'Algo ha ido mal...\nDe momento te dejo aquí el <b><a href="https://web-production-9e1b.up.railway.app/">servidor</a></b>',
+            {
+                parse_mode: 'HTML'
+            }
+        );
+        logger.color('red').log('Error writting in database: ', error);
+    }
+    // postgres.query(
+    //     `UPDATE messages SET message = '${resp}' WHERE id = 1`,
+    //     (err: any, { rows } : { rows: any}) => {
+    //         if (err) {
+    //             console.log(err);
+    //             bot.sendMessage(
+    //                 chatId,
+    //                 'Algo ha ido mal y estoy trabajando en ello...'
+    //             );
+    //             bot.sendMessage(
+    //                 chatId,
+    //                 'De momento te dejo aquí el <b><a href="https://web-production-9e1b.up.railway.app/">servidor</a></b>',
+    //                 {
+    //                     parse_mode: 'HTML'
+    //                 }
+    //             );
+    //         } else {
+    //             bot.sendMessage(
+    //                 chatId,
+    //                 '¡MENSAJE PUBLICADO EN EL <b><a href="https://web-production-9e1b.up.railway.app/">SERVIDOR</a>!</b>',
+    //                 {
+    //                     parse_mode: 'HTML'
+    //                 }
+    //             );
+    //         }
+    //         postgres.end();
+    //     }
+    // );
 }
 
 // axios

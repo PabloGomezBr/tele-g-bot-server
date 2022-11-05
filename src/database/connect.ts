@@ -3,7 +3,7 @@ import { Client } from 'pg';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
-const postgres = new Client({
+export const postgres = new Client({
     user: process.env.DATABASE_USER,
     host: process.env.DATABASE_HOST,
     database: process.env.DATABASE_NAME,
@@ -11,5 +11,3 @@ const postgres = new Client({
     // Convertir a number con +
     port: +process.env.DATABASE_PORT
 });
-
-export default postgres;
