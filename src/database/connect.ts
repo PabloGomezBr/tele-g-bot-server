@@ -1,4 +1,5 @@
 import { Client } from 'pg';
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -7,16 +8,8 @@ const postgres = new Client({
     host: process.env.DATABASE_HOST,
     database: process.env.DATABASE_NAME,
     password: process.env.DATABASE_PASS,
+    // Convertir a number con +
     port: +process.env.DATABASE_PORT
 });
-
-export function connectToPostgres() {
-    try {
-        postgres.connect();
-    } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log('Error connecting to database: ', error);
-    }
-}
 
 export default postgres;

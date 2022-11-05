@@ -6,8 +6,11 @@ import telegramBot from 'node-telegram-bot-api';
 import * as Controller from './api/bot/controller';
 import { saveDoc, sendHelp } from './api/bot/helpers';
 import router from './api/router';
-import postgres, { connectToPostgres } from './database/connect';
+import postgres from './database/connect';
 // import axios from 'axios';
+
+export var isDatabaseConnected = false;
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -15,12 +18,21 @@ require('dotenv').config();
 const app: Application = express();
 const port = process.env.PORT || 3000;
 
-connectToPostgres();
-
 app.use('/', router);
 
 // Start server
-app.listen(port, () => logger.color('green').success(`\nServer is listening on port ${port}!`));
+app.listen(port, async () => {
+    logger.log('Trying to connect to database...');
+    try {
+        await postgres.connect();
+        logger.color('green').log(`Connected successfully to database [${process.env.DATABASE_NAME}]\n`);
+        isDatabaseConnected = true;
+    } catch (error) {
+        logger.color('red').log(`ERROR: Failed establishing connection to database [${process.env.DATABASE_NAME}]: `, error);
+        logger.color('yellow').log('WARNING: Some features involving database won\'t work!\n');
+    }
+    logger.color('green').log(`Server is listening on port ${port}!`);
+});
 
 // Init Telegram Bot
 const token = process.env.TELEGRAM_TOKEN;

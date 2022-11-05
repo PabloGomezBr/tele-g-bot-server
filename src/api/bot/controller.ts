@@ -2,7 +2,7 @@ import logger from 'node-color-log';
 import TelegramBot from 'node-telegram-bot-api';
 
 import postgres from '../../database/connect';
-import { bot } from '../../server';
+import { bot, isDatabaseConnected } from '../../server';
 import commands from './commands';
 import { saveDoc, sendHelp } from './helpers';
 
@@ -22,7 +22,12 @@ export function onTextHelp(msg: TelegramBot.Message) {
 
 export function onTextSaludos(msg: TelegramBot.Message) {
     const chatId = msg.chat.id;
-    bot.sendMessage(chatId, `¡Hola <b>${msg.from.first_name}</b>!`, { parse_mode: 'HTML' });
+    if (isDatabaseConnected) {
+        bot.sendMessage(chatId, `¡Hola <b>${msg.from.first_name}</b>!`, { parse_mode: 'HTML' });
+    } else {
+        bot.sendMessage(chatId, `¡Hola <b>${msg.from.first_name}</b>!`, { parse_mode: 'HTML' });
+        bot.sendMessage(chatId, 'Lamentablemente no hay base de datos :(');
+    }
 }
 
 export async function onTextChatbot(msg: TelegramBot.Message) {
