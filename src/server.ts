@@ -32,7 +32,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
 
 // Have Node serve the files for our built React app
 app.use(express.static(path.resolve(__dirname, '../client/build')));
-app.use('/', router);
+app.use('/api', router);
 
 // Start server
 app.listen(port, async () => {
