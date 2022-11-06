@@ -6,7 +6,7 @@
     "scripts": {
         "start": "ts-node-esm ./src/server.ts",
         "start-dev": "nodemon",
-        "build": "cd client && npm install && npm run build",
+        "build": "tsc",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Pablo Gómez",
