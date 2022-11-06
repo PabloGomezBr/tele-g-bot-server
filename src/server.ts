@@ -1,4 +1,5 @@
 /* eslint-disable new-cap */
+import cors from 'cors';
 import express, { Application, Request, Response, NextFunction } from 'express';
 import logger from 'node-color-log';
 import telegramBot from 'node-telegram-bot-api';
@@ -8,7 +9,6 @@ import * as Controller from './bot/controller';
 import { saveDoc, sendHelp } from './bot/helpers';
 import { postgres } from './database/connect';
 // import axios from 'axios';
-
 export var isDatabaseConnected = false;
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -16,7 +16,16 @@ require('dotenv').config();
 
 // Boot express
 const app: Application = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
+
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    app.use(cors());
+} else {
+    const whileListCors = ['http://localhost:3000'];
+    app.use(cors({
+        origin: whileListCors
+    }));
+}
 
 app.use('/', router);
 

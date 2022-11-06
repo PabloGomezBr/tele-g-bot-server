@@ -122,7 +122,7 @@ export async function onTextMensaje(msg: TelegramBot.Message, text: RegExpExecAr
         await postgres.query(`UPDATE messages SET message = '${resp}' WHERE id = 1`);
         bot.sendMessage(
             chatId,
-            '¡MENSAJE PUBLICADO EN EL <b><a href="https://web-production-9e1b.up.railway.app/">SERVIDOR</a>!</b>',
+            '¡MENSAJE PUBLICADO EN EL <b><a href="https://tele-g-bot.up.railway.app/">SERVIDOR</a>!</b>',
             {
                 parse_mode: 'HTML'
             }
@@ -130,7 +130,7 @@ export async function onTextMensaje(msg: TelegramBot.Message, text: RegExpExecAr
     } catch (error) {
         bot.sendMessage(
             chatId,
-            'Algo ha ido mal...\nDe momento te dejo aquí el <b><a href="https://web-production-9e1b.up.railway.app/">servidor</a></b>',
+            'Algo ha ido mal...\nDe momento te dejo aquí el <b><a href="https://tele-g-bot.up.railway.app/">servidor</a></b>',
             {
                 parse_mode: 'HTML'
             }
@@ -148,7 +148,7 @@ export async function onTextMensaje(msg: TelegramBot.Message, text: RegExpExecAr
     //             );
     //             bot.sendMessage(
     //                 chatId,
-    //                 'De momento te dejo aquí el <b><a href="https://web-production-9e1b.up.railway.app/">servidor</a></b>',
+    //                 'De momento te dejo aquí el <b><a href="https://tele-g-bot.up.railway.app/">servidor</a></b>',
     //                 {
     //                     parse_mode: 'HTML'
     //                 }
@@ -156,7 +156,7 @@ export async function onTextMensaje(msg: TelegramBot.Message, text: RegExpExecAr
     //         } else {
     //             bot.sendMessage(
     //                 chatId,
-    //                 '¡MENSAJE PUBLICADO EN EL <b><a href="https://web-production-9e1b.up.railway.app/">SERVIDOR</a>!</b>',
+    //                 '¡MENSAJE PUBLICADO EN EL <b><a href="https://tele-g-bot.up.railway.app/">SERVIDOR</a>!</b>',
     //                 {
     //                     parse_mode: 'HTML'
     //                 }
@@ -168,18 +168,18 @@ export async function onTextMensaje(msg: TelegramBot.Message, text: RegExpExecAr
 }
 
 // axios
-//     .post("https://web-production-9e1b.up.railway.app/message", { resp })
+//     .post("https://tele-g-bot.up.railway.app/message", { resp })
 //     .then((res) => {
 //         console.log(`statusCode: ${res.statusCode}`);
 //         console.log(res);
-//         bot.sendMessage(chatId, `¡MENSAJE PUBLICADO EN EL <b><a href="https://web-production-9e1b.up.railway.app/">SERVIDOR</a>!</b>`, {
+//         bot.sendMessage(chatId, `¡MENSAJE PUBLICADO EN EL <b><a href="https://tele-g-bot.up.railway.app/">SERVIDOR</a>!</b>`, {
 //             parse_mode: "HTML",
 //         });
 //     })
 //     .catch((error) => {
 //         console.error('ERROR POST: ', error);
 //         bot.sendMessage(chatId, 'El comando no está listo todavía...');
-//         bot.sendMessage(chatId, `De momento te dejo aquí el <b><a href="https://web-production-9e1b.up.railway.app/">servidor</a></b>`, {
+//         bot.sendMessage(chatId, `De momento te dejo aquí el <b><a href="https://tele-g-bot.up.railway.app/">servidor</a></b>`, {
 //             parse_mode: "HTML",
 //         });
 //     });
