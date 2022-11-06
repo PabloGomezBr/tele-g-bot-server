@@ -6,7 +6,7 @@
     "scripts": {
         "start": "ts-node-esm ./src/server.ts",
         "start-dev": "nodemon",
-        "build": "tsc",
+        "build": "cd client && npm install && npm run build",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Pablo Gómez",
@@ -19,6 +19,7 @@
         "mongoose": "^6.6.1",
         "node-color-log": "^10.0.2",
         "node-telegram-bot-api": "^0.59.0",
+        "path": "^0.12.7",
         "pg": "^8.8.0"
     },
     "devDependencies": {

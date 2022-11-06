@@ -1,4 +1,6 @@
 /* eslint-disable new-cap */
+import path from 'path';
+
 import cors from 'cors';
 import express, { Application, Request, Response, NextFunction } from 'express';
 import logger from 'node-color-log';
@@ -9,6 +11,7 @@ import * as Controller from './bot/controller';
 import { saveDoc, sendHelp } from './bot/helpers';
 import { postgres } from './database/connect';
 // import axios from 'axios';
+
 export var isDatabaseConnected = false;
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -27,6 +30,8 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     }));
 }
 
+// Have Node serve the files for our built React app
+app.use(express.static(path.resolve(__dirname, '../client/build')));
 app.use('/', router);
 
 // Start server
