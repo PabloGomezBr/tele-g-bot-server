@@ -1,10 +1,12 @@
 /* eslint-disable new-cap */
+import http from 'http';
 import path from 'path';
 
 import cors from 'cors';
 import express, { Application, Request, Response, NextFunction } from 'express';
 import logger from 'node-color-log';
 import telegramBot from 'node-telegram-bot-api';
+import { Server } from 'socket.io';
 
 import router from './api/router';
 import * as Controller from './bot/controller';
@@ -15,9 +17,9 @@ import { postgres } from './database/connect';
 export var isDatabaseConnected = false;
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config();
+require('dotenv').config(); // For ENV vars
 
-// Boot express
+// Init express
 const app: Application = express();
 const port = process.env.PORT || 3001;
 
@@ -35,7 +37,7 @@ app.use(express.static(path.resolve(__dirname, '../client/build')));
 app.use('/api', router);
 
 // Start server
-app.listen(port, async () => {
+const server = app.listen(port, async () => {
     logger.log('Trying to connect to database...');
     try {
         await postgres.connect();
@@ -46,6 +48,16 @@ app.listen(port, async () => {
         logger.color('yellow').log('WARNING: Some features involving database won\'t work!\n');
     }
     logger.color('green').log(`Server is listening on port ${port}!`);
+});
+
+const io = new Server(server,
+    {
+        cors: {
+            origin: '*',
+            methods: '*'
+        } });
+io.on('connection', (socket) => {
+    logger.log('Socket IO connected', socket);
 });
 
 // Init Telegram Bot
@@ -98,7 +110,7 @@ bot.on('photo', (photo) => {
     }
 });
 
-export default app;
+export { io, app };
 
 // const server = http.createServer((req, res) => {
 //     if (req.url === '/message' && req.method === 'POST') {

@@ -2,7 +2,7 @@ import logger from 'node-color-log';
 import TelegramBot from 'node-telegram-bot-api';
 
 import { postgres } from '../database/connect';
-import { bot, isDatabaseConnected } from '../server';
+import { bot, io, isDatabaseConnected } from '../server';
 import commands from './commands';
 import { saveDoc, sendHelp } from './helpers';
 
@@ -127,10 +127,11 @@ export async function onTextMensaje(msg: TelegramBot.Message, text: RegExpExecAr
                 parse_mode: 'HTML'
             }
         );
+        io.emit('message', { message: resp });
     } catch (error) {
         bot.sendMessage(
             chatId,
-            'Algo ha ido mal...\nDe momento te dejo aquí el <b><a href="https://tele-g-bot.up.railway.app">servidor</a></b>',
+            'Algo ha ido mal...\n¿Has escrito carácteres especiales?',
             {
                 parse_mode: 'HTML'
             }
@@ -148,7 +149,7 @@ export async function onTextMensaje(msg: TelegramBot.Message, text: RegExpExecAr
     //             );
     //             bot.sendMessage(
     //                 chatId,
-    //                 'De momento te dejo aquí el <b><a href="https://tele-g-bot.up.railway.app">servidor</a></b>',
+    //                 'De momento te dejo aquí el <b><a href="${CLIENT_URL}">servidor</a></b>',
     //                 {
     //                     parse_mode: 'HTML'
     //                 }
@@ -156,7 +157,7 @@ export async function onTextMensaje(msg: TelegramBot.Message, text: RegExpExecAr
     //         } else {
     //             bot.sendMessage(
     //                 chatId,
-    //                 '¡MENSAJE PUBLICADO EN EL <b><a href="https://tele-g-bot.up.railway.app">SERVIDOR</a>!</b>',
+    //                 '¡MENSAJE PUBLICADO EN EL <b><a href="${CLIENT_URL}">SERVIDOR</a>!</b>',
     //                 {
     //                     parse_mode: 'HTML'
     //                 }
@@ -168,18 +169,18 @@ export async function onTextMensaje(msg: TelegramBot.Message, text: RegExpExecAr
 }
 
 // axios
-//     .post("https://tele-g-bot.up.railway.appmessage", { resp })
+//     .post("${CLIENT_URL}message", { resp })
 //     .then((res) => {
 //         console.log(`statusCode: ${res.statusCode}`);
 //         console.log(res);
-//         bot.sendMessage(chatId, `¡MENSAJE PUBLICADO EN EL <b><a href="https://tele-g-bot.up.railway.app">SERVIDOR</a>!</b>`, {
+//         bot.sendMessage(chatId, `¡MENSAJE PUBLICADO EN EL <b><a href="${CLIENT_URL}">SERVIDOR</a>!</b>`, {
 //             parse_mode: "HTML",
 //         });
 //     })
 //     .catch((error) => {
 //         console.error('ERROR POST: ', error);
 //         bot.sendMessage(chatId, 'El comando no está listo todavía...');
-//         bot.sendMessage(chatId, `De momento te dejo aquí el <b><a href="https://tele-g-bot.up.railway.app">servidor</a></b>`, {
+//         bot.sendMessage(chatId, `De momento te dejo aquí el <b><a href="${CLIENT_URL}">servidor</a></b>`, {
 //             parse_mode: "HTML",
 //         });
 //     });
