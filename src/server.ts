@@ -121,7 +121,7 @@ export { io, app };
 //         // res.end(`<h1>${msg}</h1>`);
 //         res.end(`<h1>funciona... a medias</h1>`);
 //     } else {
-//         let mensaje = "<h1>Tele-g-bot</h1>";
+//         let mensaje = "<h1>Tele-G-Bot</h1>";
 //         res.statusCode = 200;
 //         res.setHeader("Content-Type", "text/html");
 //         res.end(mensaje);

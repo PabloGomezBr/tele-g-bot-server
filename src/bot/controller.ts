@@ -122,7 +122,7 @@ export async function onTextMensaje(msg: TelegramBot.Message, text: RegExpExecAr
         await postgres.query(`UPDATE messages SET message = '${resp}' WHERE id = 1`);
         bot.sendMessage(
             chatId,
-            '¡MENSAJE PUBLICADO EN EL <b><a href="https://tele-g-bot.up.railway.app">SERVIDOR</a>!</b>',
+            '¡MENSAJE PUBLICADO EN EL <b><a href="https://Tele-G-Bot.up.railway.app">SERVIDOR</a>!</b>',
             {
                 parse_mode: 'HTML'
             }
