@@ -26,10 +26,11 @@ const port = process.env.PORT || 3001;
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     app.use(cors());
 } else {
-    const whileListCors = ['http://localhost:3000'];
-    app.use(cors({
-        origin: whileListCors
-    }));
+    app.use(cors());
+    // const whileListCors = ['http://localhost:3000'];
+    // app.use(cors({
+    //     origin: whileListCors
+    // }));
 }
 
 // Have Node serve the files for our built React app
